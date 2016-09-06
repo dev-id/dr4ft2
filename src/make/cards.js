@@ -325,6 +325,8 @@ function doCard(rawCard, cards, code, set) {
   var color = !colors ? 'colorless' :
     colors.length > 1 ? 'multicolor' :
     colors[0].toLowerCase()
+  
+  var cardurl = rawCard.url || `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${rawCard.multiverseid}&type=card`
 
   cards[name] = { color, name,
     type: rawCard.types[rawCard.types.length - 1],
@@ -333,7 +335,7 @@ function doCard(rawCard, cards, code, set) {
     manaCost: rawCard.manaCost || '',
     sets: {
       [code]: { rarity,
-        url: `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${rawCard.multiverseid}&type=card`
+        url: cardurl
       }
     }
   }
