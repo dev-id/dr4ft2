@@ -1,3 +1,38 @@
+/*Running Make against this file will allow you to add custom sets
+which have the correct JSON formatting to your card and set databases
+the formats are as follows
+CURRENT FORMAT (previous versions of the program used a different format)
+The set with code "ABC" named "Abacus" and containing some misc cards would look like this
+{"ABC":
+{
+"cards": [
+{
+"cid":["W"],
+"cmc":1,
+"colors":["W"],
+"cost":"W",
+"name":"Aaaaaa",
+"num":"1/264",
+"pt":"2/1",
+"rarity":"uncommon",
+"text":"",
+"type":"Creature — Hound Soldier",
+"url":"http://example.com/aaaaaa.jpg"
+},
+{
+"cid":["W"],
+"cmc":4,
+"colors":["W"],
+"cost":"2WW",
+"name":"Bbbbbb",
+"num":"2/264",
+"pt":"3/3",
+"rarity":"mythic rare",
+"text":"Lifelink",
+"type":"Legendary Enchantment Creature — God",
+"url":"http://example.com/bbbbbb.jpg"
+}]}}
+*/
 const fs = require('fs')
 
 const Cards = require('../../data/cards')
