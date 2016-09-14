@@ -80,6 +80,40 @@ function before() {
 }
 
 function after() {
+  var masterpiecelist = {
+    "BFZ": {
+      "cards": ["prairie stream","sunken hollow","smoldering marsh","cinder glade","canopy vista","hallowed fountain","watery grave","blood crypt","stomping ground","temple garden","godless shrine","steam vents","overgrown tomb","sacred foundry","breeding pool","flooded strand","polluted delta","bloodstained mire","wooded foothills","windswept heath","marsh flats","scalding tarn","verdant catacombs","arid mesa","misty rainforest"],
+      "code": "EXP"
+    },
+    "OGW": {
+      "cards": ["mystic gate","sunken ruins","graven cairns","fire-lit thicket","wooded bastion","fetid heath","cascade bluffs","twilight mire","rugged prairie","flooded grove","ancient tomb","dust bowl","eye of ugin","forbidden orchard","horizon canopy","kor haven","mana confluence","strip mine","tectonic edge","wasteland"],
+      "code": "EXP"
+    }
+  }
+  //  "KLD": {
+  //  "cards": ['cataclysmic gearhulk', 'torrential gearhulk', 'noxious gearhulk', 'combustible gearhulk', 'verdurous gearhulk', 'aether vial', "champion's helm", 'chromatic lantern', 'chrome mox', 'cloudstone curio', 'crucible of worlds', 'guantlet of power', 'hangarback walker', 'lightning greaves', 'lotus petal', 'mana crypt', 'mana vault', "mind's eye", 'mox opal', "painter's servant", 'rings of brighthearth', 'scroll rack', 'sculpting steel', 'sol ring', 'solemn simulacrum', 'static orb', 'steel overseer', 'sword of feast and famine', 'sword of fire and ice', 'sword of light and shadow']
+  //  "code": "MPS"
+  //}
+  for (var masterset in masterpiecelist) {
+    if (Sets[masterset]['special']) {
+      Sets[masterset]['special']['masterpieces'] = []
+      //masterpiecelist[masterset]['cards']
+    } else {
+      Sets[masterset]['special'] = {
+        "masterpieces": []
+      }
+      for (var mpindex in masterpiecelist[masterset]['cards']) {
+        Sets[masterset]['special']['masterpieces'].push(masterpiecelist[masterset]['cards'][mpindex].toLowerCase())
+      }
+    }
+    var mastercards = masterpiecelist[masterset]['cards']
+    for (var mastercard in mastercards) {
+      if (!Cards[mastercards[mastercard]]['sets'][masterset]) {
+        Cards[mastercards[mastercard]]['sets'][masterset] = Cards[mastercards[mastercard]]['sets'][masterpiecelist[masterset]['code']]
+        //Cards[mastercards[mastercard]]['sets'][masterset]['rarity'] = "special"
+      }
+    }
+  }
   var {EMN} = Sets
   EMN.special = {
     "mythic":[

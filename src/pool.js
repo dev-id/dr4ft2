@@ -117,6 +117,18 @@ function toPack(code) {
       break
   }
 
+  if (special) {
+    if (special.masterpieces) {
+      if (_.rand(144) == 0) {
+        //console.log("We're putting in a masterpiece, hopefully")
+        specialpick = _.choose(1, special.masterpieces)
+        pack.push(specialpick)
+        foilCard = specialpick
+      }
+      special = 0
+    }
+  }
+
   if (special)
     pack.push(_.choose(1, special))
 
