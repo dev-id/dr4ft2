@@ -137,12 +137,10 @@ function toPack(code) {
     }
   }
   //insert foil
+  var foilcard = ''
   if (_.rand(6) < 1 && !(foilCard)) {
-    var foilCard = _.choose(1, pickFoil(set))
+    foilCard = _.choose(1, pickFoil(set))
     pack.push(foilCard)
-  }
-  if (!foilCard) {
-    foilCard = ''
   }
   return toCards(pack, code, foilCard, masterpiece)
 }
