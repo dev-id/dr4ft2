@@ -16,7 +16,7 @@ var Sets = {}
 before()
 
 var types = ['core', 'expansion', 'commander', 'planechase', 'starter', 'un']
-var codes = ['EMA', 'MMA', 'VMA', 'CNS', 'TPR', 'MM2']
+var codes = ['EMA', 'MMA', 'VMA', 'CNS', 'TPR', 'MM2', 'EXP', 'MPS']
 for (var code in raw) {
   var set = raw[code]
   if (types.indexOf(set.type) > -1
@@ -75,6 +75,7 @@ function before() {
   // appear in Magic 2015 booster packs.
   raw.M15.cards = raw.M15.cards.filter(x => parseInt(x.number) < 270)
   raw.ORI.cards = raw.ORI.cards.filter(x => parseInt(x.number) < 273)
+  raw.KLD.cards = raw.KLD.cards.filter(x => parseInt(x.number) < 265)
 
   raw.OGW.cards.find(x => x.name === 'Wastes').rarity = 'Common'
 }
@@ -88,16 +89,15 @@ function after() {
     "OGW": {
       "cards": ["mystic gate","sunken ruins","graven cairns","fire-lit thicket","wooded bastion","fetid heath","cascade bluffs","twilight mire","rugged prairie","flooded grove","ancient tomb","dust bowl","eye of ugin","forbidden orchard","horizon canopy","kor haven","mana confluence","strip mine","tectonic edge","wasteland"],
       "code": "EXP"
+    },
+    "KLD": {
+      "cards": ['cataclysmic gearhulk', 'torrential gearhulk', 'noxious gearhulk', 'combustible gearhulk', 'verdurous gearhulk', 'aether vial', "champion's helm", 'chromatic lantern', 'chrome mox', 'cloudstone curio', 'crucible of worlds', 'gauntlet of power', 'hangarback walker', 'lightning greaves', 'lotus petal', 'mana crypt', 'mana vault', "mind's eye", 'mox opal', "painter's servant", 'rings of brighthearth', 'scroll rack', 'sculpting steel', 'sol ring', 'solemn simulacrum', 'static orb', 'steel overseer', 'sword of feast and famine', 'sword of fire and ice', 'sword of light and shadow'],
+      "code": "MPS"
     }
   }
-  //  "KLD": {
-  //  "cards": ['cataclysmic gearhulk', 'torrential gearhulk', 'noxious gearhulk', 'combustible gearhulk', 'verdurous gearhulk', 'aether vial', "champion's helm", 'chromatic lantern', 'chrome mox', 'cloudstone curio', 'crucible of worlds', 'guantlet of power', 'hangarback walker', 'lightning greaves', 'lotus petal', 'mana crypt', 'mana vault', "mind's eye", 'mox opal', "painter's servant", 'rings of brighthearth', 'scroll rack', 'sculpting steel', 'sol ring', 'solemn simulacrum', 'static orb', 'steel overseer', 'sword of feast and famine', 'sword of fire and ice', 'sword of light and shadow']
-  //  "code": "MPS"
-  //}
   for (var masterset in masterpiecelist) {
     if (Sets[masterset]['special']) {
       Sets[masterset]['special']['masterpieces'] = []
-      //masterpiecelist[masterset]['cards']
     } else {
       Sets[masterset]['special'] = {
         "masterpieces": []
@@ -110,7 +110,6 @@ function after() {
     for (var mastercard in mastercards) {
       if (!Cards[mastercards[mastercard]]['sets'][masterset]) {
         Cards[mastercards[mastercard]]['sets'][masterset] = Cards[mastercards[mastercard]]['sets'][masterpiecelist[masterset]['code']]
-        //Cards[mastercards[mastercard]]['sets'][masterset]['rarity'] = "special"
       }
     }
   }
@@ -360,15 +359,16 @@ function doCard(rawCard, cards, code, set) {
     colors.length > 1 ? 'multicolor' :
     colors[0].toLowerCase()
 
+  var picUrl = rawCard.url || `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${rawCard.multiverseid}&type=card`
+
   cards[name] = { color, name,
-    manaCost: rawCard.manaCost,
     type: rawCard.types[rawCard.types.length - 1],
     cmc: rawCard.cmc || 0,
     text: rawCard.text || '',
     manaCost: rawCard.manaCost || '',
     sets: {
       [code]: { rarity,
-        url: `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${rawCard.multiverseid}&type=card`
+        url: picUrl
       }
     }
   }

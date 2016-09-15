@@ -20,14 +20,39 @@ function selectRarity(set) {
   return set.common
 }
 
+function pickFoil(set) {
+  var rngFoil = _.rand(6)
+  if (rngFoil < 1)
+    if (set.mythic)
+      if (_.rand(set.mythic.length + set.rare.length) < set.mythic.length)
+        return set.mythic
+      else
+        return set.rare
+    else
+      return set.rare
+  if (rngFoil < 3)
+    return set.uncommon
+
+  return set.common
+}
+
 function toPack(code) {
   var set = Sets[code]
   var {common, uncommon, rare, mythic, special, size} = set
+
   if (mythic && !_.rand(8))
     rare = mythic
   //make small sets draftable.
   if (size < 9 && code != 'SOI' && code != 'EMN')
     size = 10
+  if (special) {
+    if (special.masterpieces) {
+      size = size - 1
+    }
+  }
+  //remove a common in case of a foil
+  size = size - 1
+  console.log("Using common size: " + size)
   var pack = [].concat(
     _.choose(size, common),
     _.choose(3, uncommon),
@@ -119,30 +144,32 @@ function toPack(code) {
   var masterpiece = ''
   if (special) {
     if (special.masterpieces) {
-      if (_.rand(144) >= 0) {
-        //console.log("We're putting in a masterpiece, hopefully")
+      if (_.rand(144) == 0) {
         specialpick = _.choose(1, special.masterpieces)
         pack.push(specialpick)
         masterpiece = specialpick
+      }
+      else {
+        pack.push(_.choose(1, common))
       }
       special = 0
     }
   }
   if (special) {
     var specialpick = _.choose(1, special)
-    //console.log("specialpick = " + specialpick)
     pack.push(specialpick)
     if (foilCard) {
       foilCard = specialpick
     }
   }
+  var foilCard = ''
   //insert foil
   if (_.rand(6) < 1 && !(foilCard)) {
-    var foilCard = _.choose(1, pickFoil(set))
+    foilCard = _.choose(1, pickFoil(set))
     pack.push(foilCard)
   }
-  if (!foilCard) {
-    foilCard = ''
+  else {
+    pack.push(_.choose(1, common))
   }
   return toCards(pack, code, foilCard, masterpiece)
 }
@@ -160,6 +187,10 @@ function toCards(pool, code, foilCard, masterpiece) {
     if (masterpiece == cardName.toString().toLowerCase()) {
       if (code == 'BFZ' || code == 'OGW') {
         card.code = 'EXP'
+        card.foil = true
+      }
+      else if (code == 'KLD') {
+        card.code = 'MPS'
         card.foil = true
       }
       masterpiece = ''
