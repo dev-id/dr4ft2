@@ -133,23 +133,42 @@ function toPack(code) {
         special = special.common
       break
   }
+<<<<<<< HEAD
 
   if (special) {
     var specialpick = _.choose(1, special)
+=======
+  var masterpiece = ''
+  if (special) {
+    if (special.masterpieces) {
+      if (_.rand(144) >= 0) {
+        //console.log("We're putting in a masterpiece, hopefully")
+        specialpick = _.choose(1, special.masterpieces)
+        pack.push(specialpick)
+        masterpiece = specialpick
+      }
+      special = 0
+    }
+  }
+  if (special) {
+    var specialpick = _.choose(1, special)
+    //console.log("specialpick = " + specialpick)
+>>>>>>> origin/enhancement-masterpieces
     pack.push(specialpick)
     if (foilCard) {
       foilCard = specialpick
     }
   }
   //insert foil
+  var foilcard = ''
   if (_.rand(6) < 1 && !(foilCard)) {
-    var foilCard = _.choose(1, pickFoil(set))
+    foilCard = _.choose(1, pickFoil(set))
     pack.push(foilCard)
   }
-  return toCards(pack, code, foilCard)
+  return toCards(pack, code, foilCard, masterpiece)
 }
 
-function toCards(pool, code, foilCard) {
+function toCards(pool, code, foilCard, masterpiece) {
   var isCube = !code
   return pool.map(cardName => {
     var card = Object.assign({}, Cards[cardName])
@@ -158,8 +177,15 @@ function toCards(pool, code, foilCard) {
     if (isCube)
       [code] = Object.keys(sets)
     card.code = mws[code] || code
-    var set = sets[code]
     card.foil = false
+    if (masterpiece == cardName.toString().toLowerCase()) {
+      if (code == 'BFZ' || code == 'OGW') {
+        card.code = 'EXP'
+        card.foil = true
+      }
+      masterpiece = ''
+    }
+    var set = sets[code]
     if (foilCard == cardName.toString().toLowerCase()) {
       card.foil = true
       foilCard = ''
